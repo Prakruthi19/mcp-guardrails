@@ -1,14 +1,5 @@
 # Forward Deployed Engineer Assessment
 
-Solutions to the four take-home tasks in `Forward Deployed Engineer
-Assesment.docx`. Each task is a self-contained project with its own Python
-virtual environment, dependencies, and tests — see each task's own README
-for setup, run instructions, and design notes.
-
-One thing worth flagging up front: the assessment document's overview says
-"5 practical technical tasks" and lists zero-trust network troubleshooting
-as a focus area, but only 4 tasks are actually detailed in the document
-(Task 1–4). This repo covers all 4 that exist.
 
 ## [Task 1 — Customer Service MCP Server](./task1-mcp-server)
 
