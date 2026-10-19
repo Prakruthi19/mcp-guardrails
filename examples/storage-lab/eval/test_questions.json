@@ -1,0 +1,72 @@
+[
+  {
+    "id": "q1_health_only_healthy",
+    "question": "What is the current health status of device nvme0n1?",
+    "expected_tools": ["check_device_health"],
+    "requires_chain": false,
+    "notes": "Simple lookup on a healthy device; should not trigger a test run."
+  },
+  {
+    "id": "q2_health_only_critical_reasoning",
+    "question": "Based on its health data, does nvme2n1 look like it's nearing end of life?",
+    "expected_tools": ["check_device_health"],
+    "requires_chain": false,
+    "notes": "Reasoning over health output (percentage_used, critical_warning) without necessarily running a test."
+  },
+  {
+    "id": "q3_chain_warning_device",
+    "question": "Check nvme1n1's health and run a test on it if the health data warrants one.",
+    "expected_tools": ["check_device_health", "run_device_test"],
+    "requires_chain": true,
+    "notes": "Core chain: health check informs the test decision. nvme1n1 is health_flag=warning, so a test should be run."
+  },
+  {
+    "id": "q4_chain_critical_device_escalation",
+    "question": "Check nvme2n1's health, run a power_cycle test if it's warranted, and tell me what to do next.",
+    "expected_tools": ["check_device_health", "run_device_test"],
+    "requires_chain": true,
+    "notes": "nvme2n1 is health_flag=critical with high unsafe_shutdowns, so failure is likely -> should trigger escalate_replace guidance, not a routine pass report."
+  },
+  {
+    "id": "q5_schedule_view",
+    "question": "What tests are currently scheduled for nvme1n1?",
+    "expected_tools": ["get_test_schedule"],
+    "requires_chain": false,
+    "notes": "Pure schedule lookup, no health check or test run needed."
+  },
+  {
+    "id": "q6_healthy_device_no_test_needed",
+    "question": "Does nvme3n1 need testing right now? Check its health first.",
+    "expected_tools": ["check_device_health"],
+    "requires_chain": false,
+    "notes": "nvme3n1 is a fresh/healthy device; correct agentic behavior is to check health and conclude no test is currently warranted."
+  },
+  {
+    "id": "q7_chain_full_triage_warning_device",
+    "question": "Give me a full triage on nvme1n1: check its health, run a relevant test if warranted, and tell me the next steps.",
+    "expected_tools": ["check_device_health", "run_device_test"],
+    "requires_chain": true,
+    "notes": "End-to-end triage chain on a warning-level device."
+  },
+  {
+    "id": "q8_chain_suspicious_device_escalation",
+    "question": "nvme2n1 has been acting up. Check its health, test it appropriately, and tell me if we need to escalate.",
+    "expected_tools": ["check_device_health", "run_device_test"],
+    "requires_chain": true,
+    "notes": "Second critical-device escalation case, phrased differently, to check the agent doesn't only escalate on exact wording."
+  },
+  {
+    "id": "q9_schedule_add",
+    "question": "Schedule a latency_benchmark test for nvme0n1 on 2026-09-10T02:00:00 and confirm it's on the schedule.",
+    "expected_tools": ["get_test_schedule"],
+    "requires_chain": false,
+    "notes": "Exercises get_test_schedule(action='add') followed by a view/confirmation."
+  },
+  {
+    "id": "q10_unknown_device_error_handling",
+    "question": "Check the health of device nvme9n9.",
+    "expected_tools": ["check_device_health"],
+    "requires_chain": false,
+    "notes": "Unknown device_id; agent should surface the tool's error clearly rather than inventing data."
+  }
+]
