@@ -1,52 +1,81 @@
-# Forward Deployed Engineer Assessment
+# OpsGuard
 
+**Let AI fix your servers, without the risk.**
 
-## [Task 1 — Customer Service MCP Server](./task1-mcp-server)
+OpsGuard sits between AI assistants and your infrastructure (Linux servers,
+Docker, Slurm clusters). Every action the AI tries is checked against the
+person's role, then **allowed**, **held for approval** or **blocked**.
+Secrets are hidden from the output, and everything goes into a
+tamper-evident audit log.
 
-A runnable MCP server (Python, official `mcp` SDK, stdio transport)
-exposing `get_customer_record` and `trigger_refund`, with strict Pydantic
-validation, proper JSON-RPC error codes, and verified stdout/stderr
-isolation. Beyond the base spec: enforced refund idempotency (a client
-retry can never double-refund), a per-transaction auto-approval cap with
-escalation instead of silent processing, and MCP tool annotations.
+**Live demo:** _coming soon_ · simulated servers, nothing to install. Click **Try the live demo** for a 2-minute guided tour.
 
-## [Task 2 — MCP Security Gateway Proxy](./task2-mcp-gateway)
+## What it does
 
-An HTTP/JSON-RPC reverse proxy (FastAPI) sitting in front of a mock
-downstream MCP server, enforcing mandatory bearer-token authentication and
-per-tool-call authorization (`admin_*` tools require the `admin` role,
-enforced with the JSON-RPC `-32001` error the task specifies). Beyond the
-base spec: structured, credential-safe audit logging of every authorization
-decision.
+| | |
+|---|---|
+| 👤 **Roles** | Viewers look. Operators fix. Admins approve. |
+| ⏸ **Approvals** | Risky actions (delete logs, reboot, drain a node) wait for a second person. Nobody approves their own request. |
+| 🔒 **Protected servers** | Mark production; any change there needs approval. |
+| 🛡 **Secret redaction** | API keys, emails and card numbers are removed before anyone, including the AI, sees them. |
+| 🔗 **Tamper-evident log** | Each entry is hash-chained to the previous one; edits are detected. |
+| 🏢 **Workspaces** | Multi-tenant: each team has its own servers, approvals and audit log. |
+| ⏱ **Rate limits** | A runaway AI can't hammer your machines. |
 
-## [Task 3 — LLM Gateway Streaming Guardrail (PII Redaction)](./task3-llm-gateway)
+Use it from the **web console**, or from **Claude Desktop, Claude Code or
+Cursor** as an MCP server. The same rules apply everywhere.
 
-An async streaming proxy that redacts emails, SSNs, and credit card numbers
-from an LLM's streamed response in real time, using a bounded-lookback
-buffer so PII split across chunk boundaries is still caught without ever
-buffering the full response. Credit card matches are Luhn-checksum
-validated to avoid false-positive redactions. Includes a documented bug
-(and fix) the test suite caught mid-development around open-ended regex
-quantifiers matching prematurely on a truncated buffer.
+## Run it
 
-## [Task 4 — Rate-Limiting & Model Fallback Router](./task4-llm-router)
-
-A resilient LLM Gateway router: a per-tenant, token-aware sliding window
-rate limiter backed by on-disk SQLite, automatic failover from a primary to
-a secondary model provider on a 429 or a 3000ms timeout, and standardized,
-sanitized error responses. Includes a documented concurrency bug (and fix)
-the test suite caught mid-development around a shared SQLite connection
-under concurrent asyncio load.
-
-## Running any task
-
-Each task folder is independent:
-
-```
-cd task<N>-...
-python -m venv .venv
-.venv/Scripts/python.exe -m pip install -r requirements.txt
+```bash
+docker compose up
+# open http://localhost:8000
 ```
 
-Then follow that task's own README for which servers to start and which
-test scripts to run.
+Without Docker (Python 3.11+):
+
+```bash
+pip install -e ".[dev]"
+opsguard serve            # http://127.0.0.1:8000
+```
+
+Set `ANTHROPIC_API_KEY` to use Claude. Without it, a scripted assistant
+stands in, going through exactly the same safety checks.
+
+## How it works
+
+```
+ Web console   ·   AI assistant   ·   Claude Desktop / Cursor (MCP)
+                         │
+            ┌──────── Guard ─────────┐
+            │ rate limit → role check │
+            │  allow / hold / block   │
+            │ hide secrets → audit    │
+            └─────────────────────────┘
+                         │
+          Linux        Docker        Slurm
+```
+
+Every request takes one code path (`opsguard/guard.py`), so a rule enforced
+for the web console is enforced for the AI and MCP clients too.
+
+## Tech
+
+Python · FastAPI · SQLite · Model Context Protocol (MCP) · Claude API ·
+Docker · Prometheus metrics · GitHub Actions CI · vanilla JS (no build step)
+
+## Tests
+
+```bash
+pytest -q
+```
+
+53 tests: policy rules, approval races, redaction, audit tampering, rate
+limits under concurrency, workspace isolation and the full demo story end
+to end.
+
+## More
+
+- [Design notes](docs/DESIGN.md): architecture, decisions and trade-offs
+- [`opsguard.yaml`](opsguard.yaml): roles, users, workspaces and protected servers
+- `legacy/`: the earlier prototypes this project grew out of

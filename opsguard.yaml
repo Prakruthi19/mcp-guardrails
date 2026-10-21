@@ -1,0 +1,63 @@
+# OpsGuard configuration.
+#
+# This file ships set up for the public demo: simulated servers and the
+# built-in demo users below. For real use, switch the connectors to
+# `local`, replace the users and tokens, and keep this file out of git
+# (or point OPSGUARD_CONFIG at a private copy).
+
+# Which systems the assistant can reach, and how:
+#   demo  - simulated servers/cluster (safe to expose publicly)
+#   local - the machine OpsGuard runs on (psutil, systemctl, docker, Slurm CLIs)
+#   off   - not loaded
+connectors:
+  linux: demo
+  docker: demo
+  slurm: demo
+
+llm:
+  # auto = Claude when ANTHROPIC_API_KEY is set, otherwise the scripted mock
+  # (so the demo never depends on an API key or quota).
+  provider: auto
+  model: claude-opus-5-5
+
+database: data/opsguard.db
+
+# Who can use OpsGuard. Tokens are sent as `Authorization: Bearer <token>`.
+# The demo tokens are public on purpose - replace them for real use.
+#
+# `workspace` puts a user in a tenant (default: "default"). Each workspace
+# has its own approvals, its own audit log and, in demo mode, its own copy
+# of the servers. Nobody can see or approve another workspace's requests.
+users:
+  alice: {role: viewer, token: demo-alice, workspace: acme}
+  bob: {role: operator, token: demo-bob, workspace: acme}
+  carol: {role: admin, token: demo-carol, workspace: acme}
+  dave: {role: operator, token: demo-dave, workspace: globex}
+  erin: {role: admin, token: demo-erin, workspace: globex}
+
+# What each role may do, by tool risk level:
+#   read      - looks at things (status, logs)
+#   change    - routine, reversible actions (restart a container, cancel a job)
+#   dangerous - destructive or hard to undo (delete files, reboot, drain a node)
+# Each value is allow, approval (held until an approver says yes) or deny.
+roles:
+  viewer: {read: allow, change: deny, dangerous: deny}
+  operator: {read: allow, change: allow, dangerous: approval}
+  admin: {read: allow, change: allow, dangerous: approval}
+
+# Roles allowed to approve held actions. Nobody can approve their own request.
+approvers: [admin]
+
+# Any change or dangerous action that targets one of these needs approval,
+# even for roles that are otherwise allowed to do it.
+protected_targets: [db-01]
+
+# Per-tool overrides, applied before the role rules (allow, approval or deny).
+tool_overrides: {}
+
+# Paths `cleanup_logs` may touch in local mode.
+cleanup_roots: [/var/log]
+
+rate_limits:
+  tool_calls_per_minute: 30
+  chat_messages_per_minute: 10

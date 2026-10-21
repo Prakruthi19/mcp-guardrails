@@ -1,0 +1,17 @@
+# docker compose up  ->  http://localhost:8000
+services:
+  opsguard:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # Leave empty to use the scripted demo assistant.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - opsguard-data:/data
+      # To manage real servers, mount your own config instead of the demo one:
+      # - ./my-opsguard.yaml:/app/opsguard.yaml:ro
+    restart: unless-stopped
+
+volumes:
+  opsguard-data:

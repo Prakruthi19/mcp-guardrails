@@ -1,0 +1,36 @@
+[project]
+name = "opsguard"
+version = "0.1.0"
+description = "A safe AI assistant for teams that run Linux servers, containers and Slurm clusters."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.156",
+    "uvicorn>=0.54",
+    "aiosqlite>=0.22",
+    "pyyaml>=6.0",
+    "anthropic>=1.15",
+    "mcp>=2.3",
+    "psutil>=7.2",
+    "prometheus_client>=0.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1", "pytest-asyncio>=1.4", "httpx>=0.28"]
+
+[project.scripts]
+opsguard = "opsguard.__main__:main"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["opsguard*"]
+
+[tool.setuptools.package-data]
+opsguard = ["web/static/*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

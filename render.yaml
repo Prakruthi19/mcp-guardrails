@@ -1,0 +1,16 @@
+# One-click deploy of the public demo on Render (https://render.com).
+# Dashboard -> New -> Blueprint -> pick this repo. Free plan: the service
+# sleeps when idle and the demo state resets on each deploy, which is fine
+# for a demo (it runs on simulated servers).
+services:
+  - type: web
+    name: opsguard-demo
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      # Leave unset to run the scripted assistant (no API cost). Set it in
+      # the dashboard to use Claude.
+      - key: ANTHROPIC_API_KEY
+        sync: false
