@@ -16,3 +16,9 @@ audit.log
 
 # Office lock files
 ~$*
+
+# OpsGuard runtime state
+data/
+.env
+*.egg-info/
+.pytest_cache/

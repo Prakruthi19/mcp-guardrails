@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OpsGuard</title>
+  <meta name="description" content="Let AI fix your servers without the risk. OpsGuard checks, approves or blocks every action an AI assistant takes on your infrastructure, hides secrets, and logs everything.">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="landing">
+  <header class="lnav">
+    <a class="brand" href="/">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>OpsGuard</span>
+    </a>
+    <nav class="lnav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#install">Self-host</a>
+      <a href="/api/docs">API</a>
+    </nav>
+    <a class="btn" href="/app">Open demo</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <span class="eyebrow">Guardrails for AI in operations</span>
+      <h1>Let AI fix your servers.<br><span class="accent">Without the risk.</span></h1>
+      <p class="lead">OpsGuard sits between AI assistants and your infrastructure. Every action is checked, approved or blocked, and logged.</p>
+      <div class="cta">
+        <a class="btn big" href="/app?tour=1">▶ Try the live demo</a>
+        <a class="btn ghost big" href="#install">Self-host free</a>
+      </div>
+      <p class="muted small-print">No sign-up. Simulated servers, real guardrails.</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="window">
+        <div class="window-bar"><i></i><i></i><i></i><span>Live decisions</span></div>
+        <div class="feed-demo">
+          <div class="op s-ok"><div class="op-row"><span class="verdict ok">✓ Allowed</span><span class="op-what">Restart nginx <span class="on">web-01</span></span><span class="mini-av av-operator">B</span></div></div>
+          <div class="op s-held"><div class="op-row"><span class="verdict held">⏸ Held</span><span class="op-what">Clean up logs <span class="on">web-01</span></span><span class="mini-av av-operator">B</span></div><div class="op-note">Risky: needs an admin</div></div>
+          <div class="op s-blocked"><div class="op-row"><span class="verdict blocked">✕ Blocked</span><span class="op-what">Reboot <span class="on">db-01</span></span><span class="mini-av av-viewer">A</span></div><div class="op-note">Viewers can't do this</div></div>
+          <div class="op s-ok"><div class="op-row"><span class="verdict ok">✓ Allowed</span><span class="op-what">Logs api <span class="on">api-01</span></span><span class="mini-av av-viewer">A</span></div><div class="op-note shield">🛡 4 secrets hidden</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="works-with">
+    <span class="muted">Works with</span>
+    <span>Linux</span><span>Docker</span><span>Slurm</span><span>Claude Desktop</span><span>Claude Code</span><span>Cursor</span><span>any MCP client</span>
+  </section>
+
+  <section class="lsection" id="features">
+    <h2 class="lh2">Everything between the AI and your servers</h2>
+    <div class="features">
+      <div class="feature"><span class="ficon">👤</span><h3>Roles</h3><p>Viewers look. Operators fix. Admins approve.</p></div>
+      <div class="feature"><span class="ficon">⏸</span><h3>Approvals</h3><p>Risky actions wait for a second person.</p></div>
+      <div class="feature"><span class="ficon">🛡</span><h3>Secret redaction</h3><p>Keys, emails and card numbers never leave the server.</p></div>
+      <div class="feature"><span class="ficon">🔗</span><h3>Tamper-proof log</h3><p>Every action is recorded. Edits are detected.</p></div>
+      <div class="feature"><span class="ficon">🔒</span><h3>Protected servers</h3><p>Mark production. Any change there needs approval.</p></div>
+      <div class="feature"><span class="ficon">⏱</span><h3>Rate limits</h3><p>A runaway AI can't hammer your machines.</p></div>
+    </div>
+  </section>
+
+  <section class="lsection" id="how">
+    <h2 class="lh2">How it works</h2>
+    <div class="steps3">
+      <div class="step3"><b>1</b><h3>AI asks</h3><p>“Restart nginx on web-01”</p></div>
+      <div class="arrow">→</div>
+      <div class="step3"><b>2</b><h3>OpsGuard checks</h3><p>Who is asking? How risky? Which server?</p></div>
+      <div class="arrow">→</div>
+      <div class="step3"><b>3</b><h3>Run, hold or block</h3><p>Then hide secrets and write the log.</p></div>
+    </div>
+  </section>
+
+  <section class="lsection" id="install">
+    <h2 class="lh2">Running in one minute</h2>
+    <div class="install">
+      <div><h3>Start it</h3><pre class="code">docker compose up
+# open http://localhost:8000</pre></div>
+      <div><h3>Connect Claude Desktop</h3><pre class="code">"opsguard": {
+  "command": "opsguard",
+  "args": ["mcp"],
+  "env": { "OPSGUARD_TOKEN": "your-token" }
+}</pre></div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>See it block a bad action in 2 minutes.</h2>
+    <a class="btn big" href="/app?tour=1">▶ Start the tour</a>
+  </section>
+
+  <footer class="lfoot">
+    <span>OpsGuard</span>
+    <a href="/app">Console</a>
+    <a href="/api/docs">API</a>
+    <a href="/metrics">Metrics</a>
+  </footer>
+</body>
+</html>
