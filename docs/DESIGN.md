@@ -23,7 +23,7 @@ It works with Linux hosts, Docker and Slurm clusters, on cloud VMs,
 on-premises or in a homelab. You can use it from its own web UI, or from
 Claude Desktop, Claude Code or Cursor over MCP.
 
-> **Live demo:** _add your deployed URL here_. The demo runs against
+> **Live demo:** https://opsguard-demo.onrender.com. The demo runs against
 > **simulated** servers and a simulated Slurm cluster, so you can try
 > anything safely.
 

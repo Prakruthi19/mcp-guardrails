@@ -8,7 +8,7 @@ person's role, then **allowed**, **held for approval** or **blocked**.
 Secrets are hidden from the output, and everything goes into a
 tamper-evident audit log.
 
-**Live demo:** _coming soon_ · simulated servers, nothing to install. Click **Try the live demo** for a 2-minute guided tour.
+**Live demo: https://opsguard-demo.onrender.com** · simulated servers, nothing to install. Click **Try the live demo** for a 2-minute guided tour. (Free hosting: the first load after a quiet spell takes ~50 s.)
 
 ## What it does
 
